@@ -18,6 +18,7 @@ type Server struct {
 func NewServer(todoController *controller.TodoController) *Server {
 	g := gin.Default()
 	g.Use(errorMiddleware())
+	g.LoadHTMLGlob("templates/*.tmpl")
 	return &Server{
 		Gin:            g,
 		TodoController: todoController,
@@ -48,5 +49,5 @@ func (s *Server) GetTodo(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"todo": res.Todo})
+	ctx.HTML(http.StatusOK, "todo_index.tmpl", gin.H{"todo": res.Todo})
 }

@@ -1,0 +1,14 @@
+<!--todo_index.html-->
+
+<!--header template-->
+{{ template "header.tmpl" .}}
+
+  <h1>Todo item</h1>
+  <ul>
+    <li>TodoID: {{.todo.TodoID}}</li>
+    <li>UserID: {{.todo.UserID}}</li>
+    <li>Content: {{.todo.Content}}</li>
+  </ul>
+
+<!--footer template-->
+{{ template "footer.tmpl" .}}
