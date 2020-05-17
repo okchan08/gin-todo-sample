@@ -26,11 +26,16 @@ func NewServer(todoController *controller.TodoController) *Server {
 }
 
 func (s *Server) SetRoute() {
+	s.Gin.GET("/", s.GetIndex)
 	s.Gin.GET("/todo/:id", s.GetTodo)
 }
 
 func (s *Server) Run() {
 	s.Gin.Run()
+}
+
+func (s *Server) GetIndex(ctx *gin.Context) {
+	ctx.HTML(http.StatusOK, "home.tmpl", gin.H{})
 }
 
 func (s *Server) GetTodo(ctx *gin.Context) {
