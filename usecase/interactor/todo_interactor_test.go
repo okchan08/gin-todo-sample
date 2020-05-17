@@ -7,7 +7,7 @@ import (
 	mockRepository "gin-todo-sample/usecase/repository/mock"
 	"testing"
 
-	gomock "github.com/golang/mock/gomock"
+	"github.com/golang/mock/gomock"
 	"github.com/google/go-cmp/cmp"
 )
 
