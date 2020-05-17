@@ -25,7 +25,7 @@ func NewServer(todoController *controller.TodoController) *Server {
 }
 
 func (s *Server) SetRoute() {
-	s.Gin.GET("/:id", s.GetTodo)
+	s.Gin.GET("/todo/:id", s.GetTodo)
 }
 
 func (s *Server) Run() {
