@@ -2,6 +2,8 @@ package registry
 
 import (
 	"gin-todo-sample/domain"
+	"gin-todo-sample/infrastructure/database"
+	"gin-todo-sample/infrastructure/database/mysql"
 	"gin-todo-sample/interface/controller"
 	"gin-todo-sample/usecase/interactor"
 )
@@ -41,4 +43,18 @@ func newInputPort() *interactor.TodoInputPortImpl {
 		newMemoryTodoRepository(),
 		interactor.NewTodoOutputPortImpl(),
 	)
+}
+
+// User controller registry
+func NewUserController() *controller.UserController {
+	inputPort := newUserInputPort()
+	return &controller.UserController{
+		UserInputPort: inputPort,
+	}
+}
+
+func newUserInputPort() *interactor.UserInputPortImpl {
+	return interactor.NewUserInputPortImpl(
+		database.NewUserRepositoryImpl(mysql.NewMySQLHadler()),
+		interactor.NewUserOutputPortImpl())
 }

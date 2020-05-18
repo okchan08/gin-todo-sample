@@ -11,7 +11,8 @@ func main() {
 	fmt.Println("gin todo list sample")
 
 	todoController := registry.NewTodoController()
-	server := gin.NewServer(todoController)
+	userController := registry.NewUserController()
+	server := gin.NewServer(todoController, userController)
 	server.SetRoute()
 
 	server.Run()
