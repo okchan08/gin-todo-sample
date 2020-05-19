@@ -16,12 +16,24 @@ func NewUserRepositoryImpl(handler rdb.SQLHandler) *UserRepositoryImpl {
 	}
 }
 
-func (repo *UserRepositoryImpl) FindOne(id domain.UserID) domain.User {
+type UserRepositoryError struct{}
+
+func (e *UserRepositoryError) Error() string {
+	return "user repository error"
+}
+
+func (e *UserRepositoryError) StatusCode() int {
+	return 407
+}
+
+func (repo *UserRepositoryImpl) FindOne(id domain.UserID) (domain.User, port.Error) {
 	user := domain.User{}
 	user.UserID = id
-	repo.SQLHandler.First(user)
+	if err := repo.SQLHandler.Where("user_id = ?", id).Find(&user).GetErrors(); len(err) > 0 {
+		return user, &UserRepositoryError{}
+	}
 
-	return user
+	return user, nil
 }
 
 func (repo *UserRepositoryImpl) Create(user domain.User) port.Error {

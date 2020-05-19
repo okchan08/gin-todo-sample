@@ -21,7 +21,14 @@ func NewUserInputPortImpl(
 }
 
 func (p *UserInputPortImpl) Get(request *port.GetUserRequest) (*port.GetUserResponse, port.Error) {
-	user := p.UserRepository.FindOne(request.UserID)
+	user, err := p.UserRepository.FindOne(request.UserID)
+
+	if err != nil {
+		return &port.GetUserResponse{
+			User: nil,
+		}, err
+	}
+
 	return &port.GetUserResponse{
 		User: &user,
 	}, nil

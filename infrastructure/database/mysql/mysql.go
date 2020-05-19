@@ -39,11 +39,26 @@ func NewMySQLHadler() rdb.SQLHandler {
 }
 
 func (handler *MySQLHandler) First(out interface{}, where ...interface{}) rdb.SQLHandler {
-	handler.Conn.First(out, where...)
-	return handler
+	newConn := handler.Conn.First(out, where...)
+	return &MySQLHandler{
+		Conn: newConn,
+	}
 }
 
 func (handler *MySQLHandler) Find(out interface{}, where ...interface{}) rdb.SQLHandler {
-	handler.Conn.Find(out, where...)
-	return handler
+	newConn := handler.Conn.Find(out, where...)
+	return &MySQLHandler{
+		Conn: newConn,
+	}
+}
+
+func (handler *MySQLHandler) Where(query interface{}, args ...interface{}) rdb.SQLHandler {
+	newConn := handler.Conn.Where(query, args...)
+	return &MySQLHandler{
+		Conn: newConn,
+	}
+}
+
+func (handler *MySQLHandler) GetErrors() []error {
+	return handler.Conn.GetErrors()
 }

@@ -6,8 +6,12 @@ type UserID int64
 
 type User struct {
 	UserID    UserID
-	email     string
+	Email     string
 	UserName  string
 	Password  string
-	createdAt time.Time
+	CreatedAt time.Time
+}
+
+func (User) TableName() string {
+	return "USERS"
 }

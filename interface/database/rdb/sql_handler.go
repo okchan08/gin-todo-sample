@@ -5,6 +5,7 @@ import "gin-todo-sample/usecase/port"
 type SQLHandler interface {
 	First(interface{}, ...interface{}) SQLHandler
 	Find(interface{}, ...interface{}) SQLHandler
+	Where(interface{}, ...interface{}) SQLHandler
 }
 
 type Result interface {
