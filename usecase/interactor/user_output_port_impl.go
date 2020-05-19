@@ -16,3 +16,11 @@ func (p *UserOutputPortImpl) Get(user *domain.User) (*port.GetUserResponse, port
 		User: user,
 	}, nil
 }
+
+func (p *UserOutputPortImpl) Create(user *domain.User) (*port.CreateUserResponse, port.Error) {
+	return &port.CreateUserResponse{
+		UserID:   user.UserID,
+		UserName: user.UserName,
+		Email:    user.Email,
+	}, nil
+}

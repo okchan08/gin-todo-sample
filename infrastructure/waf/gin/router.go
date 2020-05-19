@@ -6,6 +6,7 @@ import (
 	"gin-todo-sample/usecase/port"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,6 +35,8 @@ func (s *Server) SetRoute() {
 	s.Gin.GET("/", s.GetIndex)
 	s.Gin.GET("/todo/:id", s.GetTodo)
 	s.Gin.GET("/user/:id", s.GetUser)
+	s.Gin.GET("/signup", s.GetSignup)
+	s.Gin.POST("/signup", s.CreateUser)
 }
 
 func (s *Server) Run() {
@@ -80,4 +83,30 @@ func (s *Server) GetUser(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"User": res.User})
+}
+
+func (s *Server) GetSignup(ctx *gin.Context) {
+	ctx.HTML(http.StatusOK, "signup.tmpl", gin.H{})
+}
+
+func (s *Server) CreateUser(ctx *gin.Context) {
+	var form domain.User
+
+	if err := ctx.Bind(&form); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"form": form})
+		ctx.Abort()
+	}
+
+	// TODO ここ直したい
+	form.CreatedAt = time.Now()
+
+	request := port.CreateUserRequest{
+		User: &form,
+	}
+
+	if _, err := s.UserController.CreateUser(&request); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
+	}
+
+	ctx.Redirect(302, "/")
 }
