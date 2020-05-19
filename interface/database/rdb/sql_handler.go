@@ -6,6 +6,8 @@ type SQLHandler interface {
 	First(interface{}, ...interface{}) SQLHandler
 	Find(interface{}, ...interface{}) SQLHandler
 	Where(interface{}, ...interface{}) SQLHandler
+	Create(interface{}) SQLHandler
+	Error() error
 }
 
 type Result interface {

@@ -59,6 +59,13 @@ func (handler *MySQLHandler) Where(query interface{}, args ...interface{}) rdb.S
 	}
 }
 
-func (handler *MySQLHandler) GetErrors() []error {
-	return handler.Conn.GetErrors()
+func (handler *MySQLHandler) Create(value interface{}) rdb.SQLHandler {
+	newConn := handler.Conn.Create(value)
+	return &MySQLHandler{
+		Conn: newConn,
+	}
+}
+
+func (handler *MySQLHandler) Error() error {
+	return handler.Conn.Error
 }

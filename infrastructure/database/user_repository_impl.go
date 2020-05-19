@@ -16,10 +16,12 @@ func NewUserRepositoryImpl(handler rdb.SQLHandler) *UserRepositoryImpl {
 	}
 }
 
-type UserRepositoryError struct{}
+type UserRepositoryError struct {
+	Message string
+}
 
 func (e *UserRepositoryError) Error() string {
-	return "user repository error"
+	return e.Message
 }
 
 func (e *UserRepositoryError) StatusCode() int {
@@ -29,14 +31,17 @@ func (e *UserRepositoryError) StatusCode() int {
 func (repo *UserRepositoryImpl) FindOne(id domain.UserID) (domain.User, port.Error) {
 	user := domain.User{}
 	user.UserID = id
-	if err := repo.SQLHandler.Where("user_id = ?", id).Find(&user).GetErrors(); len(err) > 0 {
-		return user, &UserRepositoryError{}
+	if err := repo.SQLHandler.Where("user_id = ?", id).Find(&user).Error(); err != nil {
+		return user, &UserRepositoryError{"Resource Not Found"}
 	}
 
 	return user, nil
 }
 
 func (repo *UserRepositoryImpl) Create(user domain.User) port.Error {
+	if err := repo.SQLHandler.Create(user).Error(); err != nil {
+		return &UserRepositoryError{"Failed to create record"}
+	}
 	return nil
 }
 
