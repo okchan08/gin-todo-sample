@@ -7,6 +7,7 @@ import (
 
 type UserRepository interface {
 	FindOne(domain.UserID) (domain.User, port.Error)
+	FindOneByEmail(string) (domain.User, port.Error)
 	Create(domain.User) port.Error
 	Update(domain.User) port.Error
 }

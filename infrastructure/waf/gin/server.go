@@ -1,6 +1,7 @@
 package gin
 
 import (
+	"fmt"
 	"gin-todo-sample/domain"
 	password "gin-todo-sample/infrastructure/security"
 	"gin-todo-sample/usecase/port"
@@ -8,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -88,5 +90,43 @@ func (s *Server) CreateUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
 	}
 
-	ctx.Redirect(302, "/")
+	ctx.Redirect(http.StatusFound, "/")
+}
+
+func (s *Server) GetSignIn(ctx *gin.Context) {
+	ctx.HTML(http.StatusOK, "signin.tmpl", gin.H{})
+}
+
+func (s *Server) PostSignIn(ctx *gin.Context) {
+	email := ctx.PostForm("email")
+	pass := ctx.PostForm("password")
+
+	request := &port.GetUserRequest{Email: email}
+	userResponse, err := s.UserController.GetUser(request)
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "user not found"})
+		ctx.Abort()
+	}
+
+	user := userResponse.User
+	if !password.ComparePasswordAndHash(pass, user.Password) {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid password"})
+		ctx.Abort()
+	}
+
+	// create session
+	session := sessions.Default(ctx)
+	session.Set("UserID", user.UserID)
+	session.Save()
+
+	url := fmt.Sprintf("/user/%d", user.UserID)
+	ctx.Redirect(http.StatusFound, url)
+}
+
+func (s *Server) Logout(ctx *gin.Context) {
+	session := sessions.Default(ctx)
+	session.Clear()
+	session.Save()
+	ctx.JSON(http.StatusOK, gin.H{"message": "logout"})
 }

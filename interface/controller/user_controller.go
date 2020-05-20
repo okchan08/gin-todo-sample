@@ -16,6 +16,10 @@ func (c *UserController) GetUser(params *port.GetUserRequest) (*port.GetUserResp
 	return c.UserInputPort.Get(params)
 }
 
+func (c *UserController) GetUserByEmail(params *port.GetUserRequest) (*port.GetUserResponse, port.Error) {
+	return c.UserInputPort.Get(params)
+}
+
 func (c *UserController) CreateUser(params *port.CreateUserRequest) (*port.CreateUserResponse, port.Error) {
 	return c.UserInputPort.Create(params)
 }

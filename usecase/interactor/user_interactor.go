@@ -1,6 +1,7 @@
 package interactor
 
 import (
+	"gin-todo-sample/domain"
 	"gin-todo-sample/usecase/port"
 	"gin-todo-sample/usecase/repository"
 )
@@ -21,7 +22,14 @@ func NewUserInputPortImpl(
 }
 
 func (p *UserInputPortImpl) Get(request *port.GetUserRequest) (*port.GetUserResponse, port.Error) {
-	user, err := p.UserRepository.FindOne(request.UserID)
+	var user domain.User
+	var err port.Error
+
+	if request.Email != "" {
+		user, err = p.UserRepository.FindOneByEmail(request.Email)
+	} else {
+		user, err = p.UserRepository.FindOne(request.UserID)
+	}
 
 	// TODO: refactoring to use UserOutputPort
 	if err != nil {

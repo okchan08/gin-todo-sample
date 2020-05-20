@@ -4,6 +4,7 @@ import "gin-todo-sample/domain"
 
 type GetUserRequest struct {
 	UserID domain.UserID
+	Email  string
 }
 
 type GetUserResponse struct {

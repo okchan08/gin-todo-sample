@@ -1,0 +1,12 @@
+{{ template "header.tmpl" .}}
+
+<div class="input">
+  <p>{{.err}}</p>
+  <form action="/signin" method="post">
+    <p>メールアドレス :<input type="text" name="email" placeholder=""/></p>
+    <p>パスワード :<input type="password" name="password" placeholder=""/></p>
+    <p><input type="submit" value="ログイン" /></p>
+  </form>
+</div>
+
+{{ template "footer.tmpl" .}}
