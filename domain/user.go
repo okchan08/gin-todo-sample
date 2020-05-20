@@ -5,7 +5,7 @@ import "time"
 type UserID int64
 
 type User struct {
-	UserID    UserID `form:"username" binding:"required"`
+	UserID    UserID
 	Email     string `form:"email" binding:"required"`
 	UserName  string `form:"username" binding:"required"`
 	Password  string `form:"password" binding:"required"`
